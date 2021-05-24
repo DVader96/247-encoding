@@ -7,7 +7,7 @@ DT := $(shell date +"%Y%m%d-%H%M")
 #  Configurable options
 # -----------------------------------------------------------------------------
 
-PRJCT_ID := podcast
+PRJCT_ID := podcast2
 # {podcast | tfs}
 
 # 625 Electrode IDs
@@ -19,7 +19,7 @@ E_LIST := $(shell seq 1 105)
 SID := 676
 E_LIST := $(shell seq 1 125)
 
-PKL_IDENTIFIER := full
+PKL_IDENTIFIER := full-lm-out
 # {full | trimmed}
 
 # podcast electeode IDs
@@ -41,7 +41,7 @@ E_LIST :=  $(shell seq 1 115)
 # E_LIST :=  $(shell seq 1 80)
 # SID := 798
 # E_LIST :=  $(shell seq 1 195)
-
+SID := 777
 # number of permutations (goes with SH and PSH)
 NPERM := 1000
 
@@ -128,7 +128,7 @@ run-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-reg-pca50d \
 			--output-prefix '';\
 
 
@@ -152,7 +152,7 @@ run-sig-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-lm-out \
 			--output-prefix '';\
 
 # Recommended naming convention for output_folder
@@ -230,12 +230,8 @@ plot-encoding1:
 	python code/tfsenc_plots.py \
 			--sid $(SID) \
 			--input-directory \
-				20210114-0845-hg-200ms-all-676-gpt2-cnxt-1024-pca_0d \
-				20210114-0845-hg-200ms-all-676-gpt2-cnxt-1024-pca_50d \
-				20210114-0844-hg-200ms-all-676-glove50-cnxt-0-pca_0d \
+                                podcast-gpt2-xl-pca50d \
 			--labels \
-				gpt2-Fcnxt-pca0d \
 				gpt2-Fcnxt-pca50d \
-				glove50 \
 			--output-file-name \
-				'$(DT)-$(SID)-glove50_gpt2-xl_Fcnxt-gpt2-xl_Fcnxt-pca_50d';
+				'$(DT)-$(SID)-glove50_gpt2-xl_Fcnxt-gpt2-xl_Fcnxt-pca_50d-eric-true';
