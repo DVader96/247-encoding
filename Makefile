@@ -19,7 +19,7 @@ E_LIST := $(shell seq 1 105)
 SID := 676
 E_LIST := $(shell seq 1 125)
 
-PKL_IDENTIFIER := full-lm-out
+PKL_IDENTIFIER := full-hs
 # {full | trimmed}
 
 # podcast electeode IDs
@@ -78,9 +78,12 @@ WV := all
 PCA := --pca-flag
 PCA_TO := 50
 
+# num layers
+LAYERS := {1..12..1}
 # Choose the command to run: python runs locally, echo is for debugging, sbatch
 # is for running on SLURM all lags in parallel.
-CMD := python
+#CMD := python
+CMD := sbatch submit1.sh
 # {echo | python | sbatch submit1.sh}
 
 #TODO: move paths to makefile
@@ -155,6 +158,32 @@ run-sig-encoding:
 			$(PSH) \
 			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-lm-out \
 			--output-prefix '';\
+
+#echo $$layer  \#
+run-layered-sig-encoding:
+	mkdir -p logs 
+	for layer in $(LAYERS); do \
+		$(CMD) code/$(FILE).py \
+			--project-id $(PRJCT_ID) \
+			--pkl-identifier $(PKL_IDENTIFIER)$$layer \
+			--conversation-id $(CONVERSATION_IDX) \
+			--sig-elec-file bobbi.csv \
+			--emb-type $(EMB) \
+			--context-length $(CNXT_LEN) \
+			--align-with $(ALIGN_WITH) \
+			--align-target-context-length $(ALIGN_TGT_CNXT_LEN) \
+			--window-size $(WS) \
+			--word-value $(WV) \
+			--npermutations $(NPERM) \
+			--lags $(LAGS) \
+			--min-word-freq $(MWF) \
+			$(PCA) \
+			--reduce-to $(PCA_TO) \
+			$(SH) \
+			$(PSH) \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-hs$$layer \
+			--output-prefix ''; \
+	done
 
 # Recommended naming convention for output_folder
 #--output-prefix $(USR)-$(WS)ms-$(WV); \
