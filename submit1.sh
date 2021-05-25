@@ -1,7 +1,7 @@
 #!/bin/bash
 #!/bin/bash
-#SBATCH --time=6:00:00
-#SBATCH --mem=128GB
+#SBATCH --time=2:00:00
+#SBATCH --mem=30GB
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
 #SBATCH -o './logs/%A.out'
@@ -18,7 +18,7 @@ elif [[ "$HOSTNAME" == *"della"* ]]
 then
     echo "It's Della"
     module load anaconda
-    source activate torch-env
+    source activate torch_env
 else
     module load anacondapy
     source activate srm

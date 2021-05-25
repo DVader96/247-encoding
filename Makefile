@@ -59,7 +59,8 @@ CNXT_LEN := 1024
 WS := 200
 
 # Choose which set of embeddings to align with
-ALIGN_WITH := gpt2-xl
+#ALIGN_WITH := gpt2-xl
+ALIGN_WITH := glove50
 ALIGN_TGT_CNXT_LEN := 1024
 
 # Specify the minimum word frequency
