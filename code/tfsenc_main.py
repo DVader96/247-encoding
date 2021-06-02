@@ -154,7 +154,7 @@ def process_sig_electrodes(args, datum):
     sig_elec_file = os.path.join(
         os.path.join(os.getcwd(), 'code', args.sig_elec_file))
     sig_elec_list = pd.read_csv(sig_elec_file)
-
+    #breakpoint()
     # Loop over each electrode
     for subject, elec_name in sig_elec_list.itertuples(index=False):
 

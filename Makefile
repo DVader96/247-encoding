@@ -19,7 +19,7 @@ E_LIST := $(shell seq 1 105)
 SID := 676
 E_LIST := $(shell seq 1 125)
 
-PKL_IDENTIFIER := full-hs
+PKL_IDENTIFIER := full-gpt2-xl-lm_out47
 # {full | trimmed}
 
 # podcast electeode IDs
@@ -79,11 +79,11 @@ PCA := --pca-flag
 PCA_TO := 50
 
 # num layers
-LAYERS := {1..12..1}
+LAYERS := {0..48..1}
 # Choose the command to run: python runs locally, echo is for debugging, sbatch
 # is for running on SLURM all lags in parallel.
-#CMD := python
-CMD := sbatch submit1.sh
+CMD := python
+#CMD := sbatch submit1.sh
 # {echo | python | sbatch submit1.sh}
 
 #TODO: move paths to makefile
@@ -142,7 +142,7 @@ run-sig-encoding:
 			--project-id $(PRJCT_ID) \
 			--pkl-identifier $(PKL_IDENTIFIER) \
 			--conversation-id $(CONVERSATION_IDX) \
-			--sig-elec-file bobbi.csv \
+			--sig-elec-file bobbi_up2date.csv \
 			--emb-type $(EMB) \
 			--context-length $(CNXT_LEN) \
 			--align-with $(ALIGN_WITH) \
@@ -156,7 +156,7 @@ run-sig-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-lm-out \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-gpt2-xl-lm-out \
 			--output-prefix '';\
 
 #echo $$layer  \#
@@ -167,7 +167,7 @@ run-layered-sig-encoding:
 			--project-id $(PRJCT_ID) \
 			--pkl-identifier $(PKL_IDENTIFIER)$$layer \
 			--conversation-id $(CONVERSATION_IDX) \
-			--sig-elec-file bobbi.csv \
+			--sig-elec-file bobbi_up2date.csv \
 			--emb-type $(EMB) \
 			--context-length $(CNXT_LEN) \
 			--align-with $(ALIGN_WITH) \
@@ -181,7 +181,7 @@ run-layered-sig-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-hs$$layer \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-gpt2-xl-hs$$layer \
 			--output-prefix ''; \
 	done
 

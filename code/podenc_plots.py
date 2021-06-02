@@ -58,35 +58,44 @@ def plot_layers(num_layers, in_type):
     lags = np.arange(-2000, 2001, 25)
     init_grey = 1 
     max_cors = []
+    zero_cors = []
+    lag_300_cors = []
     for i in range(num_layers):
         #breakpoint()
-        ldir = glob.glob('/scratch/gpfs/eham/247-encoding-updated/results/podcast2/podcast2-gpt2-xl-pca50d-full-' + in_type + str(i) + '/*')
+        ldir = glob.glob('/scratch/gpfs/eham/247-encoding-updated/results/podcast2/podcast2-'+ in_type[:-3] + '-pca50d-full-gpt2-xl-hs' + str(i) + '/*')
         layer = extract_correlations(ldir)
         max_cors.append(np.max(layer))
-        #breakpoint()
+        zero_cors.append(layer[len(layer)//2])
+        lag_300_cors.append(layer[len(layer)//2 + 12]) # 12*25 = 300. so 12 right from 0 is 300ms
         rgb = np.random.rand(3,)
         init_grey -= 1/(math.exp(i*0.01)*(num_layers+1))
         ax.plot(lags, layer, color=str(init_grey), label='layer' + str(i)) #**
-
-    ax.plot(lags, extract_correlations(glob.glob('/scratch/gpfs/eham/247-encoding-updated/results/podcast2/podcast2-gpt2-xl-pca50d-full-lm-out/*')), color = 'r', label='contextual') 
+    
+    out_layer = extract_correlations(glob.glob('/scratch/gpfs/eham/247-encoding-updated/results/podcast2/podcast2-gpt2-xl-pca50d-full-' + in_type[:-3] + '-lm-out/*'))
+    max_cors.append(np.max(out_layer))
+    zero_cors.append(out_layer[len(out_layer)//2])
+    lag_300_cors.append(out_layer[len(out_layer)//2 + 12])
+    ax.plot(lags, out_layer, color = 'r', label='contextual') 
     ax.legend()
     ax.set(xlabel='lag (s)', ylabel='correlation', title= in_type + ' Encoding Over Layers')
     ax.grid()
-
     fig.savefig("/scratch/gpfs/eham/247-encoding-updated/results/figures/comparison_new_" + in_type + str(num_layers) + "layers_no_norm_pca.png")
     #fig.savefig("comparison_old_p_weight_test.png")
     #plt.show()
     
     fig2 = plt.figure()
-    plt.plot(range(len(max_cors)), max_cors, '-o')
+    #plt.plot(range(len(max_cors)), max_cors, '-o', color='r', label='max')
+    plt.plot(range(len(zero_cors)), zero_cors, '-o',color= 'b', label='0ms')
+    plt.plot(range(len(lag_300_cors)), lag_300_cors, '-o',color= 'g', label = '300ms')
     plt.title('Corr vs depth')
     plt.xlabel('Layer')
     plt.ylabel('R')
-    fig2.savefig('/scratch/gpfs/eham/247-encoding-updated/results/figures/Corr_vs_Depth.png')
+    plt.legend()
+    fig2.savefig('/scratch/gpfs/eham/247-encoding-updated/results/figures/Corr_vs_Depth' +in_type +'.png')
 
 if __name__ == '__main__':
     #plot_layers(11, 'key')
-    plot_layers(12, 'hs')
+    plot_layers(48, 'gpt2-xl-hs')
     #max_l2_grad = glob.glob('/scratch/gpfs/eham/podcast-encoding/results/no-shuffle-max-l2-grad/*')
     #l2_grad = extract_correlations(max_l2_grad)
     
