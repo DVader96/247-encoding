@@ -46,8 +46,8 @@ SID := 777
 NPERM := 1000
 
 # Choose the lags to run for.
+#LAGS := {-2000..2000..25}
 LAGS := {-2000..2000..25}
-
 CONVERSATION_IDX := 0
 
 # Choose which set of embeddings to use
@@ -59,8 +59,8 @@ CNXT_LEN := 1024
 WS := 200
 
 # Choose which set of embeddings to align with
-#ALIGN_WITH := gpt2-xl
-ALIGN_WITH := glove50
+ALIGN_WITH := gpt2-xl
+#ALIGN_WITH := glove50
 ALIGN_TGT_CNXT_LEN := 1024
 
 # Specify the minimum word frequency
@@ -71,7 +71,7 @@ WV := all
 
 # Choose whether to label or phase shuffle
 # SH := --shuffle
-# PSH := --phase-shuffle
+#PSH := --phase-shuffle
 
 
 # Choose whether to PCA the embeddings before regressing or not
@@ -79,11 +79,11 @@ PCA := --pca-flag
 PCA_TO := 50
 
 # num layers
-LAYERS := {0..48..1}
+LAYERS := {0..12..1}
 # Choose the command to run: python runs locally, echo is for debugging, sbatch
 # is for running on SLURM all lags in parallel.
-CMD := python
-#CMD := sbatch submit1.sh
+#CMD := python
+CMD := sbatch submit1.sh
 # {echo | python | sbatch submit1.sh}
 
 #TODO: move paths to makefile
@@ -142,7 +142,7 @@ run-sig-encoding:
 			--project-id $(PRJCT_ID) \
 			--pkl-identifier $(PKL_IDENTIFIER) \
 			--conversation-id $(CONVERSATION_IDX) \
-			--sig-elec-file bobbi_up2date.csv \
+			--sig-elec-file old_test.csv \
 			--emb-type $(EMB) \
 			--context-length $(CNXT_LEN) \
 			--align-with $(ALIGN_WITH) \
@@ -156,7 +156,7 @@ run-sig-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-gpt2-xl-lm-out \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-pval-gpt2-xl-lm_out-old_test \
 			--output-prefix '';\
 
 #echo $$layer  \#
@@ -167,7 +167,7 @@ run-layered-sig-encoding:
 			--project-id $(PRJCT_ID) \
 			--pkl-identifier $(PKL_IDENTIFIER)$$layer \
 			--conversation-id $(CONVERSATION_IDX) \
-			--sig-elec-file bobbi_up2date.csv \
+			--sig-elec-file bobbi_up2date2.csv \
 			--emb-type $(EMB) \
 			--context-length $(CNXT_LEN) \
 			--align-with $(ALIGN_WITH) \
@@ -181,7 +181,7 @@ run-layered-sig-encoding:
 			--reduce-to $(PCA_TO) \
 			$(SH) \
 			$(PSH) \
-			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-gpt2-xl-hs$$layer \
+			--output-parent-dir $(PRJCT_ID)-$(EMB)-pca50d-full-pval-gpt2-hs$$layer-5000 \
 			--output-prefix ''; \
 	done
 

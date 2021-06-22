@@ -180,6 +180,8 @@ def process_sig_electrodes(args, datum):
                 str(electrode_num + 1), '.mat'
             ]))
         try:
+            #breakpoint()
+            #print(electrode_file)
             elec_signal = loadmat(electrode_file)['p1st']
             elec_signal = elec_signal.reshape(-1, 1)
         except FileNotFoundError:

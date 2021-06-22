@@ -192,14 +192,14 @@ def encode_lags_numba(args, X, Y):
     Y = np.mean(Y, axis=-1)
 
     PY_hat = cv_lm_003(X, Y, 10)
-    rp, _, _ = encColCorr(Y, PY_hat)
+    rp, p, _ = encColCorr(Y, PY_hat)
 
-    return rp
+    return rp, p
 
 
 def encoding_mp(_, args, prod_X, prod_Y):
-    perm_rc = encode_lags_numba(args, prod_X, prod_Y)
-    return perm_rc
+    perm_rc, perm_p = encode_lags_numba(args, prod_X, prod_Y)
+    return perm_rc, perm_p
 
 
 def run_save_permutation_pr(args, prod_X, prod_Y, filename):
@@ -234,14 +234,17 @@ def run_save_permutation(args, prod_X, prod_Y, filename):
         #         range(args.npermutations))
 
         perm_prod = []
+        p_val = []
         for i in range(args.npermutations):
-            perm_prod.append(encoding_mp(i, args, prod_X, prod_Y))
+            perm_r, perm_p = encoding_mp(i, args, prod_X, prod_Y)
+            perm_prod.append(perm_r)
+            p_val.append(perm_p) 
 
         with open(filename, 'w') as csvfile:
+            #breakpoint()
             csvwriter = csv.writer(csvfile)
             csvwriter.writerows(perm_prod)
-
-
+            csvwriter.writerows(p_val)
 def load_header(conversation_dir, subject_id):
     """[summary]
 
